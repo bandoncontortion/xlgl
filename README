@@ -2,3 +2,11 @@ XLGL
 ====
 
 The Xfian Lightweight OpenGL Library
+
+Building
+  1. Use `make list` for a list of targets you can build for
+  2. Type `make [target]` so for Linux with X11 we would do `make linux_x11`
+
+If you want to make all of the libraries do just `make`
+
+Currently the windows makefiles are built to be run on Linux with a toolchain. I will add a Windows MinGW makefile later
