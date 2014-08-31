@@ -1,0 +1,47 @@
+CC      := gcc
+AR      := ar
+ARFLAGS := rcs
+OBJEXT  := .o
+CFLAGS  := -Wall -fpic -DXLGL_BUILD_LINUX_X11
+INCLUDE := -I$(BASEDIR)
+LIBS    := -lGL -lX11
+SRC     := \
+		XLGL/linux_x11/context.c \
+		XLGL/linux_x11/events.c  \
+		XLGL/linux_x11/globals.c \
+		XLGL/linux_x11/init.c    \
+		XLGL/linux_x11/logging.c \
+		XLGL/linux_x11/window.c
+OBJS    := $(MAINSRC:.c=$(OBJEXT))
+OBJS    += $(SRC:.c=$(OBJEXT))
+LIBNAME := lib$(NAME)-$(VERSION)-x11
+
+all: static shared
+
+static: $(OBJS)
+	$(AR) $(ARFLAGS) $(LIBNAME).a $(OBJS)
+
+shared: $(OBJS)
+	$(CC) -shared $(CFLAGS) $(INCLUDE) $(OBJS) -o $(LIBNAME).so $(LIBS)
+
+copy: tools/XLGL/linux_x11/
+	cp -f XLGL/linux_x11/*.h tools/XLGL/linux_x11/
+	cp -f $(LIBNAME).so tools/
+	cp -f $(LIBNAME).a tools/
+
+tools/XLGL/linux_x11/:
+	mkdir tools/XLGL/linux_x11/
+
+install:
+	@echo "TODO: linux_x11"
+
+uninstall:
+	@echo "TODO: linux_x11"
+
+%$(OBJEXT): %.c
+	$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@ $(LIBS)
+
+clean:
+	rm -rf $(OBJS)
+	rm -rf $(LIBNAME).a
+	rm -rf $(LIBNAME).so

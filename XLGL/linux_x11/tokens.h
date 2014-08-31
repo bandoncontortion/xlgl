@@ -1,0 +1,18 @@
+#ifndef __XLGL_LINUX_X11_TOKENS_H__
+#define __XLGL_LINUX_X11_TOKENS_H__
+
+#include <GL/glx.h>
+
+#define XLGL_BUFFER_SIZE     GLX_BUFFER_SIZE
+#define XLGL_LEVEL           GLX_LEVEL
+#define XLGL_RGBA            GLX_RGBA
+#define XLGL_DOUBLEBUFFER    GLX_DOUBLEBUFFER
+#define XLGL_RED_SIZE        GLX_RED_SIZE
+#define XLGL_GREEN_SIZE      GLX_GREEN_SIZE
+#define XLGL_BLUE_SIZE       GLX_BLUE_SIZE
+#define XLGL_ALPHA_SIZE      GLX_ALPHA_SIZE
+#define XLGL_DEPTH_SIZE      GLX_DEPTH_SIZE
+#define XLGL_STENCIL_SIZE    GLX_STENCIL_SIZE
+#define XLGL_NONE            GLX_NONE
+
+#endif /* __XLGL_LINUX_X11_TOKENS_H__ */

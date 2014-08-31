@@ -1,0 +1,63 @@
+NDK     := ndk-build
+TARGET  := android-10
+CFLAGS  := -Wall -DXLGL_LIB_COMPILING
+INCLUDE := $(BASEDIR)
+LIBS    := -lm -llog -landroid -lEGL -lGLESv1_CM
+SRC     := $(MAINSRC)
+SRC     += \
+		XLGL/android/context.c \
+		XLGL/android/events.c \
+		XLGL/android/globals.c \
+		XLGL/android/init.c \
+		XLGL/android/logging.c \
+		XLGL/android/window.c
+SRC     := $(addprefix ../, $(SRC))
+LIBNAME := $(NAME)-$(VERSION)-android
+
+all: jni/Android.mk
+
+static: jni/Android.mk
+
+# Shared will throw errors. Don't try it.
+shared: jni/Android.mk
+
+copy: tools/XLGL/android/
+	cp -f XLGL/android/*.h tools/XLGL/android/
+	cp -f obj/local/armeabi/lib$(LIBNAME).a tools/
+
+tools/XLGL/android/:
+	mkdir tools/XLGL/android/
+
+jni/Android.mk: jni/
+	@echo "Creating Android.mk..."
+	@echo "LOCAL_PATH := \$$(call my-dir)"                      > jni/Android.mk
+	@echo ""                                                   >> jni/Android.mk
+	@echo "include \$$(CLEAR_VARS)"                            >> jni/Android.mk
+	@echo ""                                                   >> jni/Android.mk
+	@echo "LOCAL_MODULE            :=" $(LIBNAME)              >> jni/Android.mk
+	@echo "LOCAL_CFLAGS            :=" $(CFLAGS)               >> jni/Android.mk
+	@echo "LOCAL_C_INCLUDES        :=" $(INCLUDE)              >> jni/Android.mk
+	@echo "LOCAL_SRC_FILES         :=" $(SRC)                  >> jni/Android.mk
+	@echo "LOCAL_LDLIBS            :=" $(LIBS)                 >> jni/Android.mk
+	@echo "LOCAL_STATIC_LIBRARIES  := android_native_app_glue" >> jni/Android.mk
+	@echo ""                                                   >> jni/Android.mk
+	@echo "include \$$(BUILD_STATIC_LIBRARY)"                  >> jni/Android.mk
+	@echo ""                                                   >> jni/Android.mk
+	@echo "\$$(call import-module,android/native_app_glue)"    >> jni/Android.mk
+	@echo ""                                                   >> jni/Android.mk
+	@echo "Creating Application.mk..."
+	@echo "APP_PLATFORM :=" $(TARGET)                           > jni/Application.mk
+	@ndk-build
+
+jni/:
+	mkdir jni/
+
+# In the future we might be able to "install" into the NDK itself
+install:
+	@echo "Nothing to install for android...yet WIP"
+
+uninstall:
+	@echo "Nothing to uninstall for android...yet WIP"
+
+clean:
+	rm -rf jni/ obj/

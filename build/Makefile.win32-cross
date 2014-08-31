@@ -1,0 +1,49 @@
+CC      := i686-w64-mingw32-gcc
+AR      := i686-w64-mingw32-ar
+ARFLAGS := rcs
+OBJEXT  := .obj32
+# 32 bit windows doesn't need -fpic
+CFLAGS  := -Wall -DXLGL_BUILD_WINDOWS
+INCLUDE := -I$(BASEDIR)
+LIBS    := -lopengl32 -mwindows
+SRC     := \
+		XLGL/windows/context.c \
+		XLGL/windows/events.c  \
+		XLGL/windows/globals.c \
+		XLGL/windows/init.c    \
+		XLGL/windows/logging.c \
+		XLGL/windows/window.c
+OBJS    := $(MAINSRC:.c=$(OBJEXT))
+OBJS    += $(SRC:.c=$(OBJEXT))
+LIBNAME := lib$(NAME)-$(VERSION)-win32
+
+all: static shared
+
+static: $(OBJS)
+	$(CC) $(CFLAGS) $(INCLUDE) -DGLEW_STATIC -c XLGL/windows/glew.c -o XLGL/windows/glew.obj32 $(LIBS)
+	$(AR) $(ARFLAGS) $(LIBNAME).a $(OBJS) XLGL/windows/glew.obj32
+
+shared: $(OBJS)
+	$(CC) -shared -DGLEW_BUILD $(CFLAGS) $(INCLUDE) $(OBJS) XLGL/windows/glew.c -o $(LIBNAME).dll $(LIBS)
+
+copy: tools/XLGL/windows/
+	cp -f XLGL/windows/*.h tools/XLGL/windows/
+	cp -f $(LIBNAME).dll tools/
+	cp -f $(LIBNAME).a tools/
+
+tools/XLGL/windows/:
+	mkdir tools/XLGL/windows/
+
+install:
+	@echo "TODO: windows"
+
+uninstall:
+	@echo "TODO: windows"
+
+%$(OBJEXT): %.c
+	$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@ $(LIBS)
+
+clean:
+	rm -rf $(OBJS)
+	rm -rf $(LIBNAME).a
+	rm -rf $(LIBNAME).dll
