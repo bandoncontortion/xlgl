@@ -68,7 +68,7 @@ int main(int argc, char* argv[]) {
     glBindBuffer(GL_ARRAY_BUFFER, triangleVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(data), data, GL_STATIC_DRAW);
 
-    LOGI("%s", "Dickbutt");
+    LOGI("%s", "LOG LINE");
 
     while (!xlglRequestedClose(window)) {
         glClearColor(0, 0.5, 0.5, 1);
